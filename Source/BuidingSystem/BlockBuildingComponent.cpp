@@ -14,9 +14,8 @@ UBlockBuildingComponent::UBlockBuildingComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-
+	bIsAutoJoint=false;
 }
-
 
 // Called when the game starts
 void UBlockBuildingComponent::BeginPlay()
@@ -33,11 +32,9 @@ void UBlockBuildingComponent::BeginPlay()
 FHitResult UBlockBuildingComponent::BuildTrace()
 {
 	TArray<AActor*> IgnoreActors;
-	//const FVector Start=FirstPersonCameraComponent->GetComponentLocation();
-	//const FVector End=Start+FirstPersonCameraComponent->GetForwardVector()*700.f;
 	FHitResult HitResult;
-	bool bIsHit=UKismetSystemLibrary::LineTraceSingle(GetWorld(),TraceStartPoint,TraceEndPoint,ETraceTypeQuery::TraceTypeQuery1,
-		false,IgnoreActors,EDrawDebugTrace::None,HitResult,true);
+	UKismetSystemLibrary::LineTraceSingle(GetWorld(),TraceStartPoint,TraceEndPoint,ETraceTypeQuery::TraceTypeQuery1,
+		false,IgnoreActors,EDrawDebugTrace::ForOneFrame,HitResult,true);
 	if (Cast<APlaceableBase>(HitResult.GetActor()))
 	{
 		FVector Normal=HitResult.Normal;
@@ -76,57 +73,147 @@ APlaceableBase* UBlockBuildingComponent::SelectBlock()
 	}
 }
 
-void UBlockBuildingComponent::OnBuiding()
+void UBlockBuildingComponent::OnBuidingAndSelect()
 {
 	if (bIsPreviewing)
 	{
-		if (CurrenBuildingComponentInstance)
-		{
-			APlaceableBase* PlaceableBase=Cast<APlaceableBase>(CurrenBuildingComponentInstance);
-			if (PlaceableBase)
-			{
-				PlaceableBase->Onplaced();
-				if (bIsHitBlock)
-				{
-					SpawnConstrainActor(CrossHairHitResult.GetActor(),PlaceableBase);
-					Cast<APlaceableBase>(CrossHairHitResult.GetActor())->ChildBlocks.Add(CurrenBuildingComponentInstance);
-					Cast<APlaceableBase>(CurrenBuildingComponentInstance)->ParentBlock=Cast<APlaceableBase>(CrossHairHitResult.GetActor());
-				}
-				else
-				{
-
-				}
-			}
-		}
-		CurrenBuildingComponentInstance=nullptr;
-		bIsPreviewing=false;
-		bIsSpawnReset=true;
+		OnBuiding();
 	}
 	else
 	{
-		if (SelectedBlock==nullptr)
-		{
-			SelectedBlock=SelectBlock();
-			if (SelectedBlock)
-			{
-				SelectedBlock->OnSelected();
-				FString DebugMassage=FString("SelectBlock Succeed:  "+SelectedBlock->GetName());
-				GEngine->AddOnScreenDebugMessage(-1,2.f,FColor::Green,DebugMassage);
-			}
-		}
-		else
-		{
-			SelectedBlock->OnCancelSelected();
-			SelectedBlock=SelectBlock();
-			if (SelectedBlock)
-			{
-				SelectedBlock->OnSelected();
-				FString DebugMassage=FString("SelectBlock Succeed:  "+SelectedBlock->GetName());
-				GEngine->AddOnScreenDebugMessage(-1,2.f,FColor::Green,DebugMassage);
-			}
+		OnSelect();
+	}
+}
 
+void UBlockBuildingComponent::OnBuiding()
+{
+	if (CurrenBuildingComponentInstance)
+	{
+		APlaceableBase* PlaceableBase=Cast<APlaceableBase>(CurrenBuildingComponentInstance);
+		if (PlaceableBase)
+		{
+			PlaceableBase->Onplaced();
+			if (bIsHitBlock)
+			{
+				SpawnConstrainActor(CrossHairHitResult.GetActor(),PlaceableBase);
+				Cast<APlaceableBase>(CrossHairHitResult.GetActor())->ChildBlocks.Add(CurrenBuildingComponentInstance);
+				Cast<APlaceableBase>(CurrenBuildingComponentInstance)->ParentBlock=Cast<APlaceableBase>(CrossHairHitResult.GetActor());
+				APlaceableBlock* PlaceableBlock=Cast<APlaceableBlock>(PlaceableBase);
+				if (PlaceableBlock)
+				{
+					BlockAutoJoint(PlaceableBlock);
+				}
+			}
+			else
+			{
+
+			}
 		}
-		
+	}
+	CurrenBuildingComponentInstance=nullptr;
+	bIsPreviewing=false;
+	bIsSpawnReset=true;
+}
+
+void UBlockBuildingComponent::BlockAutoJoint(APlaceableBlock* CurrentBlock)
+{
+	if (bIsAutoJoint)
+	{
+		FVector TraceStart=CurrentBlock->GetActorLocation();
+		TArray<AActor*> IgnoreActors;
+		FHitResult HitResult;
+		//Forward
+		{
+			UKismetSystemLibrary::LineTraceSingle(GetWorld(),TraceStart,TraceStart+CurrentBlock->GetActorForwardVector()*100,ETraceTypeQuery::TraceTypeQuery1,
+	false,IgnoreActors,EDrawDebugTrace::None,HitResult,true);
+			APlaceableBlock *NearBlock=Cast<APlaceableBlock>(HitResult.GetActor());
+			if (NearBlock)
+			{
+				SpawnConstrainActor(NearBlock,CurrentBlock);
+				Cast<APlaceableBase>(NearBlock)->ChildBlocks.Add(CurrentBlock);
+			}
+		}
+		//Back
+		{
+			UKismetSystemLibrary::LineTraceSingle(GetWorld(),TraceStart,TraceStart+CurrentBlock->GetActorForwardVector()*-100,ETraceTypeQuery::TraceTypeQuery1,
+false,IgnoreActors,EDrawDebugTrace::None,HitResult,true);
+			APlaceableBlock *NearBlock=Cast<APlaceableBlock>(HitResult.GetActor());
+			if (NearBlock)
+			{
+				SpawnConstrainActor(NearBlock,CurrentBlock);
+				Cast<APlaceableBase>(NearBlock)->ChildBlocks.Add(CurrentBlock);
+			}
+		}
+		//Right
+		{
+			UKismetSystemLibrary::LineTraceSingle(GetWorld(),TraceStart,TraceStart+CurrentBlock->GetActorRightVector()*100,ETraceTypeQuery::TraceTypeQuery1,
+false,IgnoreActors,EDrawDebugTrace::None,HitResult,true);
+			APlaceableBlock *NearBlock=Cast<APlaceableBlock>(HitResult.GetActor());
+			if (NearBlock)
+			{
+				SpawnConstrainActor(NearBlock,CurrentBlock);
+				Cast<APlaceableBase>(NearBlock)->ChildBlocks.Add(CurrentBlock);
+			}
+		}
+		//Left
+		{
+			UKismetSystemLibrary::LineTraceSingle(GetWorld(),TraceStart,TraceStart+CurrentBlock->GetActorRightVector()*-100,ETraceTypeQuery::TraceTypeQuery1,
+false,IgnoreActors,EDrawDebugTrace::None,HitResult,true);
+			APlaceableBlock *NearBlock=Cast<APlaceableBlock>(HitResult.GetActor());
+			if (NearBlock)
+			{
+				SpawnConstrainActor(NearBlock,CurrentBlock);
+				Cast<APlaceableBase>(NearBlock)->ChildBlocks.Add(CurrentBlock);
+			}
+		}
+		//Up
+		{
+			UKismetSystemLibrary::LineTraceSingle(GetWorld(),TraceStart,TraceStart+CurrentBlock->GetActorUpVector()*100,ETraceTypeQuery::TraceTypeQuery1,
+false,IgnoreActors,EDrawDebugTrace::None,HitResult,true);
+			APlaceableBlock *NearBlock=Cast<APlaceableBlock>(HitResult.GetActor());
+			if (NearBlock)
+			{
+				SpawnConstrainActor(NearBlock,CurrentBlock);
+				Cast<APlaceableBase>(NearBlock)->ChildBlocks.Add(CurrentBlock);
+			}
+		}
+		//Down
+		{
+			UKismetSystemLibrary::LineTraceSingle(GetWorld(),TraceStart,TraceStart+CurrentBlock->GetActorUpVector()*-100,ETraceTypeQuery::TraceTypeQuery1,
+false,IgnoreActors,EDrawDebugTrace::None,HitResult,true);
+			APlaceableBlock *NearBlock=Cast<APlaceableBlock>(HitResult.GetActor());
+			if (NearBlock)
+			{
+				SpawnConstrainActor(NearBlock,CurrentBlock);
+				Cast<APlaceableBase>(NearBlock)->ChildBlocks.Add(CurrentBlock);
+			}
+		}
+	}
+}
+
+void UBlockBuildingComponent::OnSelect()
+{
+	if (SelectedBlock==nullptr)
+	{
+		SelectedBlock=SelectBlock();
+		if (SelectedBlock)
+		{
+			SelectedBlock->OnSelected();
+			FString DebugMassage=FString("SelectBlock Succeed:  "+SelectedBlock->GetName());
+			GEngine->AddOnScreenDebugMessage(-1,2.f,FColor::Green,DebugMassage);
+		}
+	}
+	else
+	{
+		SelectedBlock->OnCancelSelected();
+		SelectedBlock=SelectBlock();
+		if (SelectedBlock)
+		{
+			SelectedBlock->OnSelected();
+			FString DebugMassage=FString("SelectBlock Succeed:  "+SelectedBlock->GetName());
+			GEngine->AddOnScreenDebugMessage(-1,2.f,FColor::Green,DebugMassage);
+		}
+
 	}
 }
 
@@ -215,7 +302,6 @@ void UBlockBuildingComponent::ResetBlockRotaion()
 	bIsBlockRotaionReset=false;
 }
 
-
 // Called every frame
 void UBlockBuildingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
@@ -257,10 +343,12 @@ void UBlockBuildingComponent::TickComponent(float DeltaTime, ELevelTick TickType
 			if (CurrenBuildingComponentInstance)
 			{
 				CurrenBuildingComponentInstance->SetActorLocation(NewLocation);
+				OwnerActorForward.Z=0;
+				FRotator LookAtRotation= UKismetMathLibrary::FindLookAtRotation(NewLocation,OwnerActorForward);
+				CurrenBuildingComponentInstance->SetActorRotation(LookAtRotation);
 				//ResetBlockRotaion();
 			}
 		}
-		//FVector NewLocation=FVector(HitActorLocation.X,HitActorLocation.Y,HitActorLocation.Z+200.f);
 
 	}
 	

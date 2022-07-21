@@ -33,9 +33,14 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category=Buiding)
 	FHitResult CrossHairHitResult;
 
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	bool bIsAutoJoint;
+
 	FVector TraceStartPoint;
 	
 	FVector TraceEndPoint;
+	
+	FVector OwnerActorForward;
 
 protected:
 	// Called when the game starts
@@ -53,26 +58,6 @@ protected:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category=Buiding)
 	bool bIsBlockRotaionReset;
 
-	FHitResult BuildTrace();
-
-	APlaceableBase* SelectBlock();
-
-	UFUNCTION(BlueprintCallable)
-	void OnBuiding();
-
-	UFUNCTION(BlueprintCallable)
-	void OnPreview();
-
-	UFUNCTION(BlueprintCallable)
-	void DeleteBlock();
-
-	UFUNCTION(BlueprintCallable)
-	AJointAcotor* SpawnConstrainActor(AActor* Parent, AActor* Child);
-
-	AActor* SpawnActorByClass(TSubclassOf<AActor> ActorClass);
-
-
-
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -81,5 +66,30 @@ public:
 
 	void ResetBlockRotaion();
 
-		
+	FHitResult BuildTrace();
+
+	APlaceableBase* SelectBlock();
+
+	UFUNCTION(BlueprintCallable)
+	void OnBuidingAndSelect();
+
+	UFUNCTION(BlueprintCallable)
+	void OnBuiding();
+	
+	UFUNCTION(BlueprintCallable)
+	void BlockAutoJoint(APlaceableBlock* CurrentBlock);
+	
+	UFUNCTION(BlueprintCallable)
+	void OnSelect();
+
+	UFUNCTION(BlueprintCallable)
+	void OnPreview();
+
+	UFUNCTION(BlueprintCallable)
+	void DeleteBlock();
+	
+	UFUNCTION(BlueprintCallable)
+	AJointAcotor* SpawnConstrainActor(AActor* Parent, AActor* Child);
+
+	AActor* SpawnActorByClass(TSubclassOf<AActor> ActorClass);
 };

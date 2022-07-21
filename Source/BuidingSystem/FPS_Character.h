@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "BesiegePlayerController.h"
 #include "BlockBuildingComponent.h"
-#include "JointAcotor.h"
 #include "GameFramework/Character.h"
 #include "FPS_Character.generated.h"
 
@@ -31,37 +30,13 @@ public:
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = Buiding)
 	UBlockBuildingComponent* BlockBuildingComponent;
-	
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category=Buiding)
-	TSubclassOf<class AActor> DefaultBuildingComponentClass;
-
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category=Buiding)
-	TSubclassOf<class AActor> CurrentBuildingComponentClass;
-
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category=Buiding)
-	AActor* CurrenBuildingComponentInstance;
 
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
 	ABesiegePlayerController* BesiegePlayerController;
 
-	UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
-	APlaceableBase* SelectedBlock;
+
 	
 protected:
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category=Buiding)
-	bool bIsBuilding;
-
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category=Buiding)
-	bool bIsReset;
-
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category=Buiding)
-	bool bIsHitBlock;
-
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category=Buiding)
-	bool bIsBlockRotaionReset;
-	
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category=Buiding)
-	FHitResult CrossHairHitResult;
 	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -74,15 +49,8 @@ protected:
 
 	void Fly(float val);
 
-	UFUNCTION(BlueprintCallable)
-	void CurrentBlockTurnRight();
+	void BlockAddRotation(float val);
 	
-	UFUNCTION(BlueprintCallable)
-    void CurrentBlockTurnLeft();
-
-	FHitResult BuildTrace();
-
-	APlaceableBase* SelectBlock();
 
 	/**
  * Called via input to turn at a given rate.
@@ -97,18 +65,13 @@ protected:
 	void LookUpAtRate(float Rate);
 
 	UFUNCTION(BlueprintCallable)
-	void OnClick();
+	void OnLeftMouseClick();
 
 	UFUNCTION(BlueprintCallable)
-	void OnBuilding();
+	void OnRightMouseClick();
 
 	UFUNCTION(BlueprintCallable)
-    void DeleteBlock();
-
-	UFUNCTION(BlueprintCallable)
-	AJointAcotor* SpawnConstrainActor(AActor* Parent, AActor* Child);
-
-	AActor* SpawnActorByClass(TSubclassOf<AActor> ActorClass,FTransform Transform);
+    void OnKeyZClick();
 
 public:
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
@@ -124,9 +87,6 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	void BlockAddRotation(float val);
-
-	void ResetBlockRotaion();
+	
 	
 };
