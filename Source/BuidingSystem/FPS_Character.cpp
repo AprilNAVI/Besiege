@@ -21,7 +21,6 @@ AFPS_Character::AFPS_Character()
 	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
 
 	// set our turn rates for input
-	UpDistance=100.f;
 	BaseTurnRate = 45.f;
 	BaseLookUpRate = 45.f;
 	bIsBuilding=false;
@@ -32,7 +31,8 @@ AFPS_Character::AFPS_Character()
 	FirstPersonCameraComponent->SetupAttachment(GetCapsuleComponent());
 	FirstPersonCameraComponent->SetRelativeLocation(FVector(-39.56f, 1.75f, 64.f)); // Position the camera
 	FirstPersonCameraComponent->bUsePawnControlRotation = true;
-	
+
+	BlockBuildingComponent=CreateDefaultSubobject<UBlockBuildingComponent>(TEXT("BlockBuildingComponent"));
 }
 
 // Called when the game starts or when spawned
@@ -40,7 +40,6 @@ void AFPS_Character::BeginPlay()
 {
 	bIsBlockRotaionReset=true;
 	Super::BeginPlay();
-	bIsBuilding=false;
 	BesiegePlayerController=Cast<ABesiegePlayerController>(UGameplayStatics::GetPlayerController(GetWorld(),0));
 	
 }
@@ -369,12 +368,12 @@ void AFPS_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 }
 
-void AFPS_Character::BlockAddRotation(float Rate)
+void AFPS_Character::BlockAddRotation(float val)
 {
 	if (CurrenBuildingComponentInstance)
 	{
 		FVector Aixs=UKismetMathLibrary::InverseTransformDirection(CurrenBuildingComponentInstance->GetActorTransform(),CurrenBuildingComponentInstance->GetActorForwardVector());
-		FRotator NewRotaion=UKismetMathLibrary::RotatorFromAxisAndAngle(Aixs,Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
+		FRotator NewRotaion=UKismetMathLibrary::RotatorFromAxisAndAngle(Aixs,val * BaseTurnRate * GetWorld()->GetDeltaSeconds());
 		CurrenBuildingComponentInstance->AddActorLocalRotation(FRotator(NewRotaion));
 	}
 }

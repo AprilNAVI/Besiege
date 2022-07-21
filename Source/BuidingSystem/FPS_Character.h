@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BesiegePlayerController.h"
+#include "BlockBuildingComponent.h"
 #include "JointAcotor.h"
 #include "GameFramework/Character.h"
 #include "FPS_Character.generated.h"
@@ -23,9 +24,13 @@ class AFPS_Character : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FirstPersonCameraComponent;
 
+
 public:
 	// Sets default values for this character's properties
 	AFPS_Character();
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = Buiding)
+	UBlockBuildingComponent* BlockBuildingComponent;
 	
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category=Buiding)
 	TSubclassOf<class AActor> DefaultBuildingComponentClass;
@@ -54,9 +59,6 @@ protected:
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category=Buiding)
 	bool bIsBlockRotaionReset;
-
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category=Buiding)
-	float UpDistance;
 	
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category=Buiding)
 	FHitResult CrossHairHitResult;
