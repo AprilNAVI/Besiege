@@ -37,6 +37,7 @@ FHitResult UBlockBuildingComponent::BuildTrace()
 		false,IgnoreActors,EDrawDebugTrace::ForOneFrame,HitResult,true);
 	if (Cast<APlaceableBase>(HitResult.GetActor()))
 	{
+		/*
 		FVector Normal=HitResult.Normal;
 		UKismetMathLibrary::Vector_Normalize(Normal);
 		FString output(
@@ -44,6 +45,8 @@ FHitResult UBlockBuildingComponent::BuildTrace()
 			+"Y: "+UKismetStringLibrary::Conv_FloatToString(Normal.Y)
 			+"Z: "+UKismetStringLibrary::Conv_FloatToString(Normal.Z));
 		GEngine->AddOnScreenDebugMessage(-1,0.5f,FColor::Blue,FString("Hit PlaceableBlock "+output));
+		
+		*/
 		bIsHitBlock=true;
 	}
 	else
@@ -344,7 +347,7 @@ void UBlockBuildingComponent::TickComponent(float DeltaTime, ELevelTick TickType
 			{
 				CurrenBuildingComponentInstance->SetActorLocation(NewLocation);
 				OwnerActorForward.Z=0;
-				FRotator LookAtRotation= UKismetMathLibrary::FindLookAtRotation(NewLocation,OwnerActorForward);
+				FRotator LookAtRotation= UKismetMathLibrary::FindLookAtRotation(NewLocation,NewLocation+OwnerActorForward);
 				CurrenBuildingComponentInstance->SetActorRotation(LookAtRotation);
 				//ResetBlockRotaion();
 			}

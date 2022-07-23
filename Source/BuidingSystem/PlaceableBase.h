@@ -80,6 +80,9 @@ public:
 	UFUNCTION(BlueprintCallable)
     virtual FVector GetCoreUp();
 
+	UFUNCTION(BlueprintCallable)
+	virtual FRotator GetCoreRotation();
+	
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	ECustomAngularConstraintMotion Swing1Limit;
 	

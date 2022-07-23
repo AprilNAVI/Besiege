@@ -68,6 +68,18 @@ FVector APlaceableBase::GetCoreUp()
 	}
 }
 
+FRotator APlaceableBase::GetCoreRotation()
+{
+	if (Cast<APlaceableBase>(ParentBlock))
+	{
+		return Cast<APlaceableBase>(ParentBlock)->GetCoreRotation();
+	}
+	else
+	{
+		return GetActorRotation();
+	}
+}
+
 // Called when the game starts or when spawned
 void APlaceableBase::BeginPlay()
 {

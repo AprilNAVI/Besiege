@@ -105,7 +105,7 @@ void AFPS_Character::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	BlockBuildingComponent->TraceStartPoint=FirstPersonCameraComponent->GetComponentLocation();
-	BlockBuildingComponent->TraceEndPoint=BlockBuildingComponent->TraceStartPoint+FirstPersonCameraComponent->GetForwardVector()*700.f;
+	BlockBuildingComponent->TraceEndPoint=BlockBuildingComponent->TraceStartPoint+FirstPersonCameraComponent->GetForwardVector()*2000.f;
 	BlockBuildingComponent->OwnerActorForward=GetActorForwardVector();
 }
 

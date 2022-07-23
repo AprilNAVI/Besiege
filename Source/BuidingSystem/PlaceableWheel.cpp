@@ -9,14 +9,13 @@ APlaceableWheel::APlaceableWheel()
 {
 	//PrimaryActorTick.bCanEverTick = true;
 
-	//RootComponent=CreateDefaultSubobject<USceneComponent>(TEXT("RootSceneComponent"));
+	RootComponent=CreateDefaultSubobject<USceneComponent>(TEXT("RootSceneComponent"));
 	StaticMesh=CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
 	ShellMesh=CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShellMesh"));
 	//CapsuleCollison=CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
     //CapsuleCollison->AddRelativeRotation(FRotator(0.f,0.f,90.f));
-	RootComponent=StaticMesh;
 
-	
+	StaticMesh->SetupAttachment(RootComponent);
 	ShellMesh->SetupAttachment(StaticMesh);
 	DefaultMaterial=CreateDefaultSubobject<UMaterialInterface>(TEXT("DefaultMaterial"));
 	PreviewMaterial=CreateDefaultSubobject<UMaterialInterface>(TEXT("PreviewMaterial"));
