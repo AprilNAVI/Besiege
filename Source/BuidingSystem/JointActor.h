@@ -6,16 +6,16 @@
 #include "PlaceableBlock.h"
 #include "PlaceableWheel.h"
 #include "GameFramework/Actor.h"
-#include "JointAcotor.generated.h"
+#include "JointActor.generated.h"
 
 UCLASS()
-class BUIDINGSYSTEM_API AJointAcotor : public AActor
+class BUIDINGSYSTEM_API AJointActor : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AJointAcotor();
+	AJointActor();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	class UPhysicsConstraintComponent* ConstraintComp;
@@ -39,6 +39,18 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void ReInitConstaintCompont(UPrimitiveComponent* Component1,UPrimitiveComponent* Component2);
+
+	UFUNCTION(BlueprintCallable)
+	void SetLinearBreakable(bool IsLinearBreakable,float LinearBreakThreshold);
+
+	UFUNCTION(BlueprintCallable)
+	void SetAngularBreakable(bool IsAngularBreakable,float AngularBreakThreshold);
+
+	UFUNCTION(BlueprintCallable)
+	void SetLinearPlasticity(bool IsAngularPlasticity,float LinearPlasticityThreshold);
+
+	UFUNCTION(BlueprintCallable)
+	void SetAngularPlasticity(bool IsAngularPlasticity,float AngularPlasticityThreshold);
 
 	UFUNCTION(BlueprintCallable)
 	AActor* GetConstraintActor1()

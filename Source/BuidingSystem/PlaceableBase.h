@@ -56,6 +56,30 @@ public:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite)
 	float PresetMass;
 
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Joint")
+	bool bIsLinearBreakable;
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Joint")
+	float LinearBreakThreshold;
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Joint")
+	bool bIsAngularBreakable;
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Joint")
+	float AngularBreakThreshold;
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Joint")
+	bool bIsAngularPlasticity;
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Joint")
+	float AngularPlasticityThreshold;
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Joint")
+	bool bIsLinearPlasticity;
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Joint")
+	float LinearPlasticityThreshold;
+	
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite)
 	UBoxComponent* BoxComponent;
 	
@@ -82,7 +106,11 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	virtual FRotator GetCoreRotation();
-	
+
+	UFUNCTION(BlueprintCallable)
+	virtual FVector GetCoreLocation();
+
+
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	ECustomAngularConstraintMotion Swing1Limit;
 	

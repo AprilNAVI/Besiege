@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "JointAcotor.h"
+#include "JointActor.h"
 #include "PlaceableBase.h"
 #include "Components/ActorComponent.h"
 #include "BlockBuildingComponent.generated.h"
@@ -89,7 +89,7 @@ public:
 	void DeleteBlock();
 	
 	UFUNCTION(BlueprintCallable)
-	AJointAcotor* SpawnConstrainActor(AActor* Parent, AActor* Child);
+	AJointActor* SpawnConstrainActor(AActor* Parent, AActor* Child);
 
 	AActor* SpawnActorByClass(TSubclassOf<AActor> ActorClass);
 };

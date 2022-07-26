@@ -247,17 +247,21 @@ void UBlockBuildingComponent::DeleteBlock()
 	}
 }
 
-AJointAcotor* UBlockBuildingComponent::SpawnConstrainActor(AActor* Parent, AActor* Child)
+AJointActor* UBlockBuildingComponent::SpawnConstrainActor(AActor* Parent, AActor* Child)
 {
 	FVector SpawnLocation=(Parent->GetActorLocation()+Child->GetActorLocation())/2;
 	const FActorSpawnParameters SpawnParameters;
-	AJointAcotor* JointAcotor=GetWorld()->SpawnActor<AJointAcotor>(AJointAcotor::StaticClass(),SpawnLocation,FRotator(0.f),SpawnParameters);
+	AJointActor* JointAcotor=GetWorld()->SpawnActor<AJointActor>(AJointActor::StaticClass(),SpawnLocation,FRotator(0.f),SpawnParameters);
 	JointAcotor->SetConstraintActor1(Parent);
 	JointAcotor->SetConstraintActor2(Child);
 	APlaceableBase* CurrentBlock=Cast<APlaceableBase>(Child);
 	if (Cast<APlaceableBase>(JointAcotor->GetConstraintActor1())&&Cast<APlaceableBase>(JointAcotor->GetConstraintActor2()))
 	{
 		JointAcotor->ConstructStrongConstraint(CurrentBlock->Swing1Limit,CurrentBlock->Angle1,CurrentBlock->Swing2Limit,CurrentBlock->Angle2,CurrentBlock->TwistLimit,CurrentBlock->TwistAngle);
+		JointAcotor->SetLinearBreakable(CurrentBlock->bIsLinearBreakable,CurrentBlock->LinearBreakThreshold);
+		JointAcotor->SetLinearPlasticity(CurrentBlock->bIsLinearPlasticity,CurrentBlock->LinearPlasticityThreshold);
+		JointAcotor->SetAngularBreakable(CurrentBlock->bIsAngularBreakable,CurrentBlock->AngularBreakThreshold);
+		JointAcotor->SetAngularPlasticity(CurrentBlock->bIsAngularPlasticity,CurrentBlock->AngularPlasticityThreshold);
 		JointAcotor->ReInitConstaintCompont(Cast<APlaceableBase>(JointAcotor->GetConstraintActor1())->GetBlockJointComponent(),Cast<APlaceableBase>(JointAcotor->GetConstraintActor2())->GetBlockJointComponent());
 	}
 	else

@@ -13,6 +13,16 @@ APlaceableBase::APlaceableBase()
 	Angle1=0.0f;
 	Angle2=0.0f;
 	TwistAngle=0.0f;
+
+	bIsLinearBreakable=false;
+	LinearBreakThreshold=0.f;
+	bIsAngularBreakable=false;
+	AngularBreakThreshold=0.f;
+
+	bIsLinearPlasticity=false;
+	LinearPlasticityThreshold=0.f;
+	bIsAngularPlasticity=false;
+	AngularPlasticityThreshold=0.f;
 }
 
 
@@ -77,6 +87,18 @@ FRotator APlaceableBase::GetCoreRotation()
 	else
 	{
 		return GetActorRotation();
+	}
+}
+
+FVector APlaceableBase::GetCoreLocation()
+{
+	if (Cast<APlaceableBase>(ParentBlock))
+	{
+		return Cast<APlaceableBase>(ParentBlock)->GetCoreLocation();
+	}
+	else
+	{
+		return GetActorLocation();
 	}
 }
 

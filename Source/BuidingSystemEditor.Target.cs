@@ -11,5 +11,9 @@ public class BuidingSystemEditorTarget : TargetRules
 		DefaultBuildSettings = BuildSettingsVersion.V2;
 
 		ExtraModuleNames.AddRange( new string[] { "BuidingSystem" } );
+		BuildEnvironment = TargetBuildEnvironment.Shared;
+		bCompileChaos = true;
+		bUseChaos = true;
+
 	}
 }

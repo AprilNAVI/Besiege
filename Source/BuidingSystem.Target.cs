@@ -11,5 +11,6 @@ public class BuidingSystemTarget : TargetRules
 		DefaultBuildSettings = BuildSettingsVersion.V2;
 
 		ExtraModuleNames.AddRange( new string[] { "BuidingSystem" } );
+		
 	}
 }
