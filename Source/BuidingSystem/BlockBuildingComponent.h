@@ -89,7 +89,7 @@ public:
 	void DeleteBlock();
 	
 	UFUNCTION(BlueprintCallable)
-	AJointActor* SpawnConstrainActor(AActor* Parent, AActor* Child,FVector SpawnLocation);
+	AJointActor* SpawnConstrainActor(AActor* Parent, AActor* Child);
 
 	AActor* SpawnActorByClass(TSubclassOf<AActor> ActorClass);
 };

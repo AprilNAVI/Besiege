@@ -52,9 +52,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetAngularPlasticity(bool IsAngularPlasticity,float AngularPlasticityThreshold);
 
-	UFUNCTION()
-	void OnJointbroken(int32 ConstraintIndex);
-
 	UFUNCTION(BlueprintCallable)
 	AActor* GetConstraintActor1()
 	{

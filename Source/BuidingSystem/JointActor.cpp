@@ -19,7 +19,7 @@ AJointActor::AJointActor()
 void AJointActor::BeginPlay()
 {
 	Super::BeginPlay();
-	ConstraintComp->OnConstraintBroken.AddDynamic(this,&AJointActor::OnJointbroken);
+
 }
 
 
@@ -61,12 +61,6 @@ void AJointActor::SetLinearPlasticity(bool IsAngularPlasticity, float LinearPlas
 void AJointActor::SetAngularPlasticity(bool IsAngularPlasticity, float AngularPlasticityThreshold)
 {
 	ConstraintComp->SetAngularPlasticity(IsAngularPlasticity,AngularPlasticityThreshold);
-}
-
-void AJointActor::OnJointbroken(int32 ConstraintIndex)
-{
-	FString LogString("Joint broken ! %d",ConstraintIndex);
-	GEngine->AddOnScreenDebugMessage(-1,2.f,FColor::Yellow,LogString);
 }
 
 void AJointActor::ConstructStrongConstraint(ECustomAngularConstraintMotion Swing1Limit,float Angle1,ECustomAngularConstraintMotion Swing2Limit,float Angle2,ECustomAngularConstraintMotion TwistLimit,float Twist)
