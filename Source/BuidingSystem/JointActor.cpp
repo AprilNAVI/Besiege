@@ -40,7 +40,6 @@ void AJointActor::ReInitConstaintCompont(UPrimitiveComponent* Component1,UPrimit
 	else
 	{
 		UE_LOG(LogTemp,Error,TEXT("ReInitConstaintCompont Failed!"));
-		ConstraintComp.dominate
 	}
 }
 
