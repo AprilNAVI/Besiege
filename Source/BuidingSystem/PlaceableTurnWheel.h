@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "PlaceableWheel.h"
+#include "PhysicsEngine/PhysicsConstraintComponent.h"
 #include "PlaceableTurnWheel.generated.h"
 
 /**
@@ -13,5 +14,19 @@ UCLASS()
 class BUIDINGSYSTEM_API APlaceableTurnWheel : public APlaceableWheel
 {
 	GENERATED_BODY()
+	
+public:
+	APlaceableTurnWheel();
+
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+	
+	virtual void Onplaced() override;
+	
+	virtual UPrimitiveComponent* GetBlockJointComponent() override;
+
+	UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
+	UPhysicsConstraintComponent* PhysicsConstraintComponent;
+	
 	
 };

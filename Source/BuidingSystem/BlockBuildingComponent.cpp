@@ -3,6 +3,7 @@
 
 #include "BlockBuildingComponent.h"
 
+#include "PlaceableTurnWheel.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetStringLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -92,6 +93,23 @@ void UBlockBuildingComponent::OnBuiding()
 {
 	if (CurrenBuildingComponentInstance)
 	{
+		APlaceableTurnWheel* TurnWheel=Cast<APlaceableTurnWheel>(CurrenBuildingComponentInstance);
+		if (TurnWheel)
+		{
+			TurnWheel->Onplaced();
+			if (bIsHitBlock)
+			{
+				FVector SpawnLocation=TurnWheel->BoxComponent->GetComponentLocation();
+				FRotator LookAtRotation= UKismetMathLibrary::FindLookAtRotation(TurnWheel->BoxComponent->GetComponentLocation(),TurnWheel->BoxComponent->GetComponentLocation()+TurnWheel->GetCoreUp());
+				SpawnConstrainActor(CrossHairHitResult.GetActor(),TurnWheel,LookAtRotation,SpawnLocation);
+				Cast<APlaceableBase>(CrossHairHitResult.GetActor())->ChildBlocks.Add(CurrenBuildingComponentInstance);
+				Cast<APlaceableBase>(CurrenBuildingComponentInstance)->ParentBlock=Cast<APlaceableBase>(CrossHairHitResult.GetActor());
+			}
+			CurrenBuildingComponentInstance=nullptr;
+			bIsPreviewing=false;
+			bIsSpawnReset=true;
+			return;
+		}
 		APlaceableBase* PlaceableBase=Cast<APlaceableBase>(CurrenBuildingComponentInstance);
 		if (PlaceableBase)
 		{
@@ -108,10 +126,6 @@ void UBlockBuildingComponent::OnBuiding()
 				{
 					BlockAutoJoint(PlaceableBlock);
 				}
-			}
-			else
-			{
-
 			}
 		}
 	}

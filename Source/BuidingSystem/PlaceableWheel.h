@@ -18,20 +18,12 @@ class BUIDINGSYSTEM_API APlaceableWheel : public APlaceableBase
 {
 	GENERATED_BODY()
 
-
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-	APlaceableWheel();
+	
 
 public:	
+	APlaceableWheel();
 
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	USphereComponent* SphereCollison;
-
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	UCapsuleComponent* CapsuleCollison;
+	virtual void BeginPlay() override;
 	
 	UFUNCTION(BlueprintCallable)
 	virtual void Onplaced() override;
@@ -42,6 +34,5 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ReserverRotation(bool IsRightEqualCoreRight);
 
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+
 };

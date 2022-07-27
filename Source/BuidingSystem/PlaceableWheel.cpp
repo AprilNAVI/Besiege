@@ -7,15 +7,11 @@
 
 APlaceableWheel::APlaceableWheel()
 {
-	//PrimaryActorTick.bCanEverTick = true;
-
-	RootComponent=CreateDefaultSubobject<USceneComponent>(TEXT("RootSceneComponent"));
+	
 	StaticMesh=CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
 	ShellMesh=CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShellMesh"));
-	//CapsuleCollison=CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
-    //CapsuleCollison->AddRelativeRotation(FRotator(0.f,0.f,90.f));
 
-	StaticMesh->SetupAttachment(RootComponent);
+	RootComponent=StaticMesh;
 	ShellMesh->SetupAttachment(StaticMesh);
 	DefaultMaterial=CreateDefaultSubobject<UMaterialInterface>(TEXT("DefaultMaterial"));
 	PreviewMaterial=CreateDefaultSubobject<UMaterialInterface>(TEXT("PreviewMaterial"));
@@ -29,10 +25,10 @@ APlaceableWheel::APlaceableWheel()
 void APlaceableWheel::BeginPlay()
 {
 	Super::BeginPlay();
-	//StaticMesh->SetRelativeScale3D(FVector(1.2f));
+
 	StaticMesh->SetMaterial(0,PreviewMaterial);
 	StaticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	//CapsuleCollison->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
 
 	ShellMesh->SetRelativeScale3D(StaticMesh->GetRelativeScale3D());
 	ShellMesh->SetVisibility(false);
@@ -73,7 +69,3 @@ void APlaceableWheel::ReserverRotation(bool IsRightEqualCoreRight)
 	}
 }
 
-void APlaceableWheel::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
