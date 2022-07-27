@@ -8,10 +8,11 @@
 
 AJointActor::AJointActor()
 {
-
 	
 	ConstraintComp=CreateDefaultSubobject<UPhysicsConstraintComponent>(TEXT("Joint"));
+	ArrowComponent=CreateDefaultSubobject<UArrowComponent>(TEXT("Arrow"));
 	RootComponent=ConstraintComp;
+	ArrowComponent->SetupAttachment(ConstraintComp);
 
 }
 
@@ -20,6 +21,10 @@ void AJointActor::BeginPlay()
 {
 	Super::BeginPlay();
 
+	ArrowComponent->SetHiddenInGame(false);
+	ArrowComponent->SetVisibility(true);
+	this->SetHidden(false);
+	ArrowComponent->SetRelativeScale3D(FVector(3.f));
 }
 
 

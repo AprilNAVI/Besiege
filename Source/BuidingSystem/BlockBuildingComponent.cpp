@@ -98,7 +98,9 @@ void UBlockBuildingComponent::OnBuiding()
 			PlaceableBase->Onplaced();
 			if (bIsHitBlock)
 			{
-				SpawnConstrainActor(CrossHairHitResult.GetActor(),PlaceableBase);
+				FVector SpawnLocation=(CrossHairHitResult.GetActor()->GetActorLocation()+PlaceableBase->GetActorLocation())/2;
+				FRotator LookAtRotation= UKismetMathLibrary::FindLookAtRotation(CrossHairHitResult.GetActor()->GetActorLocation(),CrossHairHitResult.GetActor()->GetActorLocation()+CrossHairHitResult.Normal);
+				SpawnConstrainActor(CrossHairHitResult.GetActor(),PlaceableBase,LookAtRotation,SpawnLocation);
 				Cast<APlaceableBase>(CrossHairHitResult.GetActor())->ChildBlocks.Add(CurrenBuildingComponentInstance);
 				Cast<APlaceableBase>(CurrenBuildingComponentInstance)->ParentBlock=Cast<APlaceableBase>(CrossHairHitResult.GetActor());
 				APlaceableBlock* PlaceableBlock=Cast<APlaceableBlock>(PlaceableBase);
@@ -132,7 +134,7 @@ void UBlockBuildingComponent::BlockAutoJoint(APlaceableBlock* CurrentBlock)
 			APlaceableBlock *NearBlock=Cast<APlaceableBlock>(HitResult.GetActor());
 			if (NearBlock)
 			{
-				SpawnConstrainActor(NearBlock,CurrentBlock);
+				//SpawnConstrainActor(NearBlock,CurrentBlock);
 				Cast<APlaceableBase>(NearBlock)->ChildBlocks.Add(CurrentBlock);
 			}
 		}
@@ -143,7 +145,7 @@ false,IgnoreActors,EDrawDebugTrace::None,HitResult,true);
 			APlaceableBlock *NearBlock=Cast<APlaceableBlock>(HitResult.GetActor());
 			if (NearBlock)
 			{
-				SpawnConstrainActor(NearBlock,CurrentBlock);
+				//SpawnConstrainActor(NearBlock,CurrentBlock);
 				Cast<APlaceableBase>(NearBlock)->ChildBlocks.Add(CurrentBlock);
 			}
 		}
@@ -154,7 +156,7 @@ false,IgnoreActors,EDrawDebugTrace::None,HitResult,true);
 			APlaceableBlock *NearBlock=Cast<APlaceableBlock>(HitResult.GetActor());
 			if (NearBlock)
 			{
-				SpawnConstrainActor(NearBlock,CurrentBlock);
+				//SpawnConstrainActor(NearBlock,CurrentBlock);
 				Cast<APlaceableBase>(NearBlock)->ChildBlocks.Add(CurrentBlock);
 			}
 		}
@@ -165,7 +167,7 @@ false,IgnoreActors,EDrawDebugTrace::None,HitResult,true);
 			APlaceableBlock *NearBlock=Cast<APlaceableBlock>(HitResult.GetActor());
 			if (NearBlock)
 			{
-				SpawnConstrainActor(NearBlock,CurrentBlock);
+				//SpawnConstrainActor(NearBlock,CurrentBlock);
 				Cast<APlaceableBase>(NearBlock)->ChildBlocks.Add(CurrentBlock);
 			}
 		}
@@ -176,7 +178,7 @@ false,IgnoreActors,EDrawDebugTrace::None,HitResult,true);
 			APlaceableBlock *NearBlock=Cast<APlaceableBlock>(HitResult.GetActor());
 			if (NearBlock)
 			{
-				SpawnConstrainActor(NearBlock,CurrentBlock);
+				//SpawnConstrainActor(NearBlock,CurrentBlock);
 				Cast<APlaceableBase>(NearBlock)->ChildBlocks.Add(CurrentBlock);
 			}
 		}
@@ -187,7 +189,7 @@ false,IgnoreActors,EDrawDebugTrace::None,HitResult,true);
 			APlaceableBlock *NearBlock=Cast<APlaceableBlock>(HitResult.GetActor());
 			if (NearBlock)
 			{
-				SpawnConstrainActor(NearBlock,CurrentBlock);
+				//SpawnConstrainActor(NearBlock,CurrentBlock);
 				Cast<APlaceableBase>(NearBlock)->ChildBlocks.Add(CurrentBlock);
 			}
 		}
@@ -247,11 +249,12 @@ void UBlockBuildingComponent::DeleteBlock()
 	}
 }
 
-AJointActor* UBlockBuildingComponent::SpawnConstrainActor(AActor* Parent, AActor* Child)
+AJointActor* UBlockBuildingComponent::SpawnConstrainActor(AActor* Parent, AActor* Child,FRotator LookAt,FVector SpawnLocation)
 {
-	FVector SpawnLocation=(Parent->GetActorLocation()+Child->GetActorLocation())/2;
+	
 	const FActorSpawnParameters SpawnParameters;
 	AJointActor* JointAcotor=GetWorld()->SpawnActor<AJointActor>(AJointActor::StaticClass(),SpawnLocation,FRotator(0.f),SpawnParameters);
+	JointAcotor->SetActorRotation(LookAt);
 	JointAcotor->SetConstraintActor1(Parent);
 	JointAcotor->SetConstraintActor2(Child);
 	APlaceableBase* CurrentBlock=Cast<APlaceableBase>(Child);

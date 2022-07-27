@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "PlaceableBlock.h"
 #include "PlaceableWheel.h"
+#include "Components/ArrowComponent.h"
 #include "GameFramework/Actor.h"
 #include "JointActor.generated.h"
 
@@ -19,6 +20,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	class UPhysicsConstraintComponent* ConstraintComp;
+
+	UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
+	UArrowComponent* ArrowComponent;
 		
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	AActor* ConstraintActor1;

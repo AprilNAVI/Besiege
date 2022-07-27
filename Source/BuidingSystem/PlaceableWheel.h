@@ -18,12 +18,12 @@ class BUIDINGSYSTEM_API APlaceableWheel : public APlaceableBase
 {
 	GENERATED_BODY()
 
-	APlaceableWheel();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	APlaceableWheel();
 
 public:	
 
