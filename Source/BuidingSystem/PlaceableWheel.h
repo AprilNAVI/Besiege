@@ -34,5 +34,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ReserverRotation(bool IsRightEqualCoreRight);
 
+	UFUNCTION(BlueprintCallable)
+	FVector GetWheelAxis();
+
 
 };

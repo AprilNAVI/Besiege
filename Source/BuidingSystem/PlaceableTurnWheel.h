@@ -27,6 +27,8 @@ public:
 
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
 	UPhysicsConstraintComponent* PhysicsConstraintComponent;
-	
+
+	UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
+	UStaticMeshComponent* AxisMesh;
 	
 };

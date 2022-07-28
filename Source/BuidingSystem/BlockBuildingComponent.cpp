@@ -99,8 +99,8 @@ void UBlockBuildingComponent::OnBuiding()
 			TurnWheel->Onplaced();
 			if (bIsHitBlock)
 			{
-				FVector SpawnLocation=TurnWheel->BoxComponent->GetComponentLocation();
-				FRotator LookAtRotation= UKismetMathLibrary::FindLookAtRotation(TurnWheel->BoxComponent->GetComponentLocation(),TurnWheel->BoxComponent->GetComponentLocation()+TurnWheel->GetCoreUp());
+				FVector SpawnLocation=TurnWheel->GetActorLocation();
+				FRotator LookAtRotation= UKismetMathLibrary::FindLookAtRotation(TurnWheel->GetActorLocation(),TurnWheel->GetActorLocation()+TurnWheel->GetCoreUp());
 				SpawnConstrainActor(CrossHairHitResult.GetActor(),TurnWheel,LookAtRotation,SpawnLocation);
 				Cast<APlaceableBase>(CrossHairHitResult.GetActor())->ChildBlocks.Add(CurrenBuildingComponentInstance);
 				Cast<APlaceableBase>(CurrenBuildingComponentInstance)->ParentBlock=Cast<APlaceableBase>(CrossHairHitResult.GetActor());
@@ -317,7 +317,7 @@ void UBlockBuildingComponent::ResetBlockRotaion()
 		{
 			APlaceableWheel* CurrenBuildingWheel=Cast<APlaceableWheel>(CurrenBuildingComponentInstance);
 			bool bIsRightEqualCoreRight=UKismetMathLibrary::EqualEqual_VectorVector(
-				CurrenBuildingWheel->GetBlockJointComponent()->GetForwardVector(),
+				CurrenBuildingWheel->GetWheelAxis(),
 				Cast<APlaceableBase>(CrossHairHitResult.GetActor())->GetCoreRight(),
 				0.1f);
 			CurrenBuildingWheel->ReserverRotation(bIsRightEqualCoreRight);

@@ -9,7 +9,7 @@
 APlaceableTurnWheel::APlaceableTurnWheel()
 {
 	PhysicsConstraintComponent=CreateDefaultSubobject<UPhysicsConstraintComponent>(TEXT("SelfJoint"));
-	BoxComponent=CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
+	AxisMesh=CreateDefaultSubobject<UStaticMeshComponent>(TEXT("AxisMesh"));
 
 	RootComponent=StaticMesh;
 	ShellMesh->SetupAttachment(StaticMesh);
@@ -23,45 +23,54 @@ APlaceableTurnWheel::APlaceableTurnWheel()
 void APlaceableTurnWheel::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	
+	AxisMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-	BoxComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	BoxComponent->SetCollisionObjectType(ECC_WorldDynamic);
-	BoxComponent->SetCollisionResponseToAllChannels(ECR_Block);
+	
 
 }
 
 void APlaceableTurnWheel::Onplaced()
 {
-	Super::Onplaced();
+	StaticMesh->SetMaterial(0,DefaultMaterial);
+	StaticMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	StaticMesh->SetCollisionResponseToAllChannels(ECR_Block);
+	StaticMesh->SetCollisionResponseToChannel(ECC_WorldDynamic,ECR_Ignore);
+	StaticMesh->SetSimulatePhysics(true);
+	StaticMesh->SetMassOverrideInKg(NAME_None,PresetMass,true);
 
-	BoxComponent->SetWorldLocation(StaticMesh->GetComponentLocation());
-	BoxComponent->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
-	BoxComponent->SetSimulatePhysics(true);
-	BoxComponent->SetMassOverrideInKg(NAME_None,0,true);
+	AxisMesh->SetWorldLocation(StaticMesh->GetComponentLocation());
+	AxisMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	
-	const FActorSpawnParameters SpawnParameters;
-	AJointActor* JointAcotor=GetWorld()->SpawnActor<AJointActor>(AJointActor::StaticClass(),BoxComponent->GetComponentLocation(),FRotator(0.f),SpawnParameters);
+	AxisMesh->SetSimulatePhysics(true);
+	AxisMesh->SetMassOverrideInKg(NAME_None,PresetMass,true);
+
+	
 	FRotator LookAtRotation= UKismetMathLibrary::FindLookAtRotation(GetActorLocation(),GetActorLocation()+GetActorForwardVector());
+	PhysicsConstraintComponent->SetWorldLocation(GetActorLocation());
+	PhysicsConstraintComponent->SetWorldRotation(LookAtRotation);
+	PhysicsConstraintComponent->SetAngularSwing1Limit(EAngularConstraintMotion::ACM_Locked,0.f);
+	PhysicsConstraintComponent->SetAngularSwing2Limit(EAngularConstraintMotion::ACM_Locked,0.f);
+	PhysicsConstraintComponent->SetAngularTwistLimit(EAngularConstraintMotion::ACM_Free,0);
+	PhysicsConstraintComponent->SetConstrainedComponents(AxisMesh,FName(),StaticMesh,FName());
+
+	/*
+	*	const FActorSpawnParameters SpawnParameters;
+	*	AJointActor* JointAcotor=GetWorld()->SpawnActor<AJointActor>(AJointActor::StaticClass(),BoxComponent->GetComponentLocation(),FRotator(0.f),SpawnParameters);
 	JointAcotor->SetActorRotation(LookAtRotation);
 	JointAcotor->ConstructStrongConstraint(ECustomAngularConstraintMotion::Locked,0.f,ECustomAngularConstraintMotion::Locked,0.f,ECustomAngularConstraintMotion::Free,0.f);
 	JointAcotor->SetLinearBreakable(false,0.f);
 	JointAcotor->SetLinearPlasticity(false,0.f);
 	JointAcotor->SetAngularBreakable(false,0.f);
 	JointAcotor->SetAngularPlasticity(false,0.f);
-	JointAcotor->ReInitConstaintCompont(BoxComponent,StaticMesh);
+	JointAcotor->ReInitConstaintCompont(StaticMesh,BoxComponent);
 
-	/*
-	PhysicsConstraintComponent->SetWorldLocation(GetActorLocation());
-	PhysicsConstraintComponent->SetWorldRotation(LookAtRotation);
-	PhysicsConstraintComponent->SetAngularSwing1Limit(EAngularConstraintMotion::ACM_Locked,0.f);
-	PhysicsConstraintComponent->SetAngularSwing2Limit(EAngularConstraintMotion::ACM_Locked,0.f);
-	PhysicsConstraintComponent->SetAngularTwistLimit(EAngularConstraintMotion::ACM_Free,0);
-	PhysicsConstraintComponent->SetConstrainedComponents(BoxComponent,FName(),StaticMesh,FName());
 	*/
 	
 }
 
 UPrimitiveComponent* APlaceableTurnWheel::GetBlockJointComponent()
 {
-	return BoxComponent;
+	return AxisMesh;
 }

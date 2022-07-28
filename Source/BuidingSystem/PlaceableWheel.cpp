@@ -58,14 +58,21 @@ void APlaceableWheel::ReserverRotation(bool IsRightEqualCoreRight)
 {
 	if (IsRightEqualCoreRight)
 	{
-		GetBlockJointComponent()->AddRelativeRotation(FRotator(0.f,0.f,0.f));
+		AddActorLocalRotation(FRotator(0.f,0.f,0.f));
+		//GetBlockJointComponent()->AddRelativeRotation(FRotator(0.f,0.f,0.f));
 		GEngine->AddOnScreenDebugMessage(-1,3.f,FColor::Green,FString("use the right direction as the core"));
 		
 	}
 	else
 	{
-		GetBlockJointComponent()->AddRelativeRotation(FRotator(0.f,180.f,0.f));
+		AddActorLocalRotation(FRotator(0.f,180.f,0.f));
+		//GetBlockJointComponent()->AddRelativeRotation(FRotator(0.f,180.f,0.f));
 		GEngine->AddOnScreenDebugMessage(-1,3.f,FColor::Green,FString(" use the left direction as the core"));
 	}
+}
+
+FVector APlaceableWheel::GetWheelAxis()
+{
+	return StaticMesh->GetForwardVector();
 }
 
