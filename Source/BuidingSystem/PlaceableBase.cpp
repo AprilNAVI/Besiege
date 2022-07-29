@@ -23,12 +23,28 @@ APlaceableBase::APlaceableBase()
 	LinearPlasticityThreshold=0.f;
 	bIsAngularPlasticity=false;
 	AngularPlasticityThreshold=0.f;
+	
 }
 
 
 
 void APlaceableBase::Onplaced()
 {
+}
+
+void APlaceableBase::OnSelected()
+{
+	UMaterialInstanceDynamic* MaterialInstanceDynamic= ShellMesh->CreateDynamicMaterialInstance(0,ShellMaterial);
+	if (MaterialInstanceDynamic)
+	{
+		ShellMesh->SetMaterial(0,MaterialInstanceDynamic);
+		ShellMesh->SetVisibility(true);
+	}
+}
+
+void APlaceableBase::OnCancelSelected()
+{
+	ShellMesh->SetVisibility(false);
 }
 
 UPrimitiveComponent* APlaceableBase::GetBlockJointComponent()
@@ -102,11 +118,74 @@ FVector APlaceableBase::GetCoreLocation()
 	}
 }
 
+float APlaceableBase::GetWholeMass()
+{
+	if (Cast<APlaceableBase>(ParentBlock))
+	{
+		return Cast<APlaceableBase>(ParentBlock)->GetWholeMass();
+	}
+	else
+	{
+		return TheWholeMass;
+	}
+}
+
+int APlaceableBase::GetComponentNums()
+{
+	if (Cast<APlaceableBase>(ParentBlock))
+	{
+		return Cast<APlaceableBase>(ParentBlock)->GetWholeMass();
+	}
+	else
+	{
+		return TheComponentNum;
+	}
+}
+
+void APlaceableBase::AddWholeMass(float Mass)
+{
+	if (Cast<APlaceableBase>(ParentBlock))
+	{
+		ParentBlock->AddWholeMass(Mass);
+	}
+	else
+	{
+		TheWholeMass+=Mass;
+	}
+}
+
+void APlaceableBase::AddComponentNums()
+{
+	if (Cast<APlaceableBase>(ParentBlock))
+	{
+		ParentBlock->AddComponentNums();
+	}
+	else
+	{
+		TheComponentNum++;
+	}
+}
+
+void APlaceableBase::ReduceComponentNums()
+{
+	if (Cast<APlaceableBase>(ParentBlock))
+	{
+		AddComponentNums();
+	}
+	else
+	{
+		TheComponentNum--;
+	}
+}
+
 // Called when the game starts or when spawned
 void APlaceableBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	TheWholeMass=PresetMass;
+	TheComponentNum=1;
+	ComponentLevel=0;
 }
 
 

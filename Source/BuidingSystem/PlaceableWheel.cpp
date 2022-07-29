@@ -29,8 +29,7 @@ void APlaceableWheel::BeginPlay()
 	StaticMesh->SetMaterial(0,PreviewMaterial);
 	StaticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-
-	ShellMesh->SetRelativeScale3D(StaticMesh->GetRelativeScale3D());
+	
 	ShellMesh->SetVisibility(false);
 	ShellMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }

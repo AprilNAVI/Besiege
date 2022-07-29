@@ -30,10 +30,8 @@ void APlaceableBlock::BeginPlay()
 	BoxComponent->SetBoxExtent(FVector(BlockDistance/2));
 	StaticMesh->SetMaterial(0,PreviewMaterial);
 	StaticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	StaticMesh->SetRelativeScale3D(FVector(1.15f));
 	BoxComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
-	ShellMesh->SetRelativeScale3D(StaticMesh->GetRelativeScale3D());
+	
 	ShellMesh->SetVisibility(false);
 	ShellMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }

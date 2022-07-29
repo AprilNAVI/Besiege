@@ -45,10 +45,10 @@ public:
 	UStaticMeshComponent* ShellMesh;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	AActor* ParentBlock;
+	APlaceableBase* ParentBlock;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	TArray<AActor*> ChildBlocks;
+	TArray<APlaceableBase*> ChildBlocks;
 
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite)
 	float BlockDistance;
@@ -79,16 +79,25 @@ public:
 
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Joint")
 	float LinearPlasticityThreshold;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	float TheWholeMass;
+	
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	int TheComponentNum;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	int ComponentLevel;
 	
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite)
 	UBoxComponent* BoxComponent;
 	
     virtual void Onplaced();
 
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintCallable)
 	void OnSelected();
 
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintCallable)
     void OnCancelSelected();
 
 	virtual UPrimitiveComponent* GetBlockJointComponent();
@@ -110,7 +119,24 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual FVector GetCoreLocation();
 
+	UFUNCTION(BlueprintCallable)
+	virtual float GetWholeMass();
 
+	UFUNCTION(BlueprintCallable)
+	virtual int GetComponentNums();
+
+	UFUNCTION(BlueprintCallable)
+	virtual void AddWholeMass(float Mass);
+
+	UFUNCTION(BlueprintCallable)
+	virtual void AddComponentNums();
+
+	UFUNCTION(BlueprintCallable)
+	virtual void ReduceComponentNums();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnOperate();
+	
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	ECustomAngularConstraintMotion Swing1Limit;
 	

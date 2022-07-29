@@ -4,8 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "PlaceableBase.h"
-#include "Components/CapsuleComponent.h"
-#include "Components/SphereComponent.h"
 #include "PlaceableWheel.generated.h"
 
 

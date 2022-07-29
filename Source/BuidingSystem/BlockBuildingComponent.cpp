@@ -38,16 +38,6 @@ FHitResult UBlockBuildingComponent::BuildTrace()
 		false,IgnoreActors,EDrawDebugTrace::ForOneFrame,HitResult,true);
 	if (Cast<APlaceableBase>(HitResult.GetActor()))
 	{
-		/*
-		FVector Normal=HitResult.Normal;
-		UKismetMathLibrary::Vector_Normalize(Normal);
-		FString output(
-			 "X: "+UKismetStringLibrary::Conv_FloatToString(Normal.X)
-			+"Y: "+UKismetStringLibrary::Conv_FloatToString(Normal.Y)
-			+"Z: "+UKismetStringLibrary::Conv_FloatToString(Normal.Z));
-		GEngine->AddOnScreenDebugMessage(-1,0.5f,FColor::Blue,FString("Hit PlaceableBlock "+output));
-		
-		*/
 		bIsHitBlock=true;
 	}
 	else
@@ -102,8 +92,10 @@ void UBlockBuildingComponent::OnBuiding()
 				FVector SpawnLocation=TurnWheel->GetActorLocation();
 				FRotator LookAtRotation= UKismetMathLibrary::FindLookAtRotation(TurnWheel->GetActorLocation(),TurnWheel->GetActorLocation()+TurnWheel->GetCoreUp());
 				SpawnConstrainActor(CrossHairHitResult.GetActor(),TurnWheel,LookAtRotation,SpawnLocation);
-				Cast<APlaceableBase>(CrossHairHitResult.GetActor())->ChildBlocks.Add(CurrenBuildingComponentInstance);
-				Cast<APlaceableBase>(CurrenBuildingComponentInstance)->ParentBlock=Cast<APlaceableBase>(CrossHairHitResult.GetActor());
+				Cast<APlaceableBase>(CrossHairHitResult.GetActor())->ChildBlocks.Add(TurnWheel);
+				TurnWheel->ParentBlock=Cast<APlaceableBase>(CrossHairHitResult.GetActor());
+				TurnWheel->AddWholeMass(TurnWheel->PresetMass);
+				TurnWheel->AddComponentNums();
 			}
 			CurrenBuildingComponentInstance=nullptr;
 			bIsPreviewing=false;
@@ -119,8 +111,10 @@ void UBlockBuildingComponent::OnBuiding()
 				FVector SpawnLocation=(CrossHairHitResult.GetActor()->GetActorLocation()+PlaceableBase->GetActorLocation())/2;
 				FRotator LookAtRotation= UKismetMathLibrary::FindLookAtRotation(CrossHairHitResult.GetActor()->GetActorLocation(),CrossHairHitResult.GetActor()->GetActorLocation()+CrossHairHitResult.Normal);
 				SpawnConstrainActor(CrossHairHitResult.GetActor(),PlaceableBase,LookAtRotation,SpawnLocation);
-				Cast<APlaceableBase>(CrossHairHitResult.GetActor())->ChildBlocks.Add(CurrenBuildingComponentInstance);
-				Cast<APlaceableBase>(CurrenBuildingComponentInstance)->ParentBlock=Cast<APlaceableBase>(CrossHairHitResult.GetActor());
+				Cast<APlaceableBase>(CrossHairHitResult.GetActor())->ChildBlocks.Add(PlaceableBase);
+				PlaceableBase->ParentBlock=Cast<APlaceableBase>(CrossHairHitResult.GetActor());
+				PlaceableBase->AddWholeMass(PlaceableBase->PresetMass);
+				PlaceableBase->AddComponentNums();
 				APlaceableBlock* PlaceableBlock=Cast<APlaceableBlock>(PlaceableBase);
 				if (PlaceableBlock)
 				{
@@ -258,7 +252,17 @@ void UBlockBuildingComponent::DeleteBlock()
 {
 	if (SelectedBlock)
 	{
-		Cast<APlaceableBase>(SelectedBlock)->Destroy();
+		if (SelectedBlock->ParentBlock)
+		{
+			int index=SelectedBlock->ParentBlock->Children.Find(SelectedBlock);
+			if (index!=-1)
+			{
+				SelectedBlock->ParentBlock->Children.Remove(SelectedBlock->ParentBlock->Children[index]);
+			}
+			SelectedBlock->ParentBlock->AddWholeMass(-SelectedBlock->PresetMass);
+			SelectedBlock->ParentBlock->ReduceComponentNums();
+		}
+		SelectedBlock->Destroy();
 		GEngine->AddOnScreenDebugMessage(-1,2.f,FColor::Blue,FString("Delete Block! "));
 	}
 }
@@ -292,7 +296,8 @@ AJointActor* UBlockBuildingComponent::SpawnConstrainActor(AActor* Parent, AActor
 AActor* UBlockBuildingComponent::SpawnActorByClass(TSubclassOf<AActor> ActorClass)
 {
 	FRotator(0.f,0.f,0.f);
-	const FActorSpawnParameters SpawnParameters;
+	FActorSpawnParameters SpawnParameters;
+	SpawnParameters.SpawnCollisionHandlingOverride=ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 	AActor* TempActor= GetWorld()->SpawnActor<AActor>(ActorClass,FVector(0.f),FRotator(0.f),SpawnParameters);
 	return TempActor;
 }

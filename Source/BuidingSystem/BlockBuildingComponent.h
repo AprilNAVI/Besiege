@@ -92,4 +92,6 @@ public:
 	AJointActor* SpawnConstrainActor(AActor* Parent, AActor* Child,FRotator LookAt,FVector SpawnLocation);
 
 	AActor* SpawnActorByClass(TSubclassOf<AActor> ActorClass);
+
+	TSubclassOf<AActor> PlatformClass;
 };
