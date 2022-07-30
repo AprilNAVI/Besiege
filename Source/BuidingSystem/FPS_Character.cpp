@@ -142,4 +142,16 @@ void AFPS_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 }
 
+void AFPS_Character::UnbindMouseInput()
+{
+	InputComponent = CreatePlayerInputComponent();
+	InputComponent->ClearActionBindings();
+}
+
+void AFPS_Character::UnbindKeyInput()
+{
+	InputComponent = CreatePlayerInputComponent();
+	InputComponent->ClearActionBindings();
+}
+
 

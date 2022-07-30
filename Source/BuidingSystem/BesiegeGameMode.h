@@ -9,7 +9,7 @@
 UENUM(BlueprintType)
 enum class CurrentGameStateEnum:uint8
 {
-	Editor,
+	Ready,
 	Match,
 	Placing
 };
