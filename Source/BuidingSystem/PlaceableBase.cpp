@@ -24,6 +24,17 @@ APlaceableBase::APlaceableBase()
 	bIsAngularPlasticity=false;
 	AngularPlasticityThreshold=0.f;
 	
+	AngularDriveMode=ECustomAngularDriveMode::SLERP;
+	PosTarget=FRotator(0.f);
+	bOrientationEnableTwistDrive=false;
+	bOrientationEnableSwingDrive=false;
+	VelocityTarget=FVector(0.f);
+	bVelocityEnableTwistDrive=false;
+	bVelocityEnableSwingDrive=false;
+	PositionStrength=50.f;
+	VelocityStrength=1.f;
+	MaxForce=0.f;
+
 }
 
 
@@ -183,6 +194,7 @@ void APlaceableBase::BeginPlay()
 {
 	Super::BeginPlay();
 
+	
 	TheWholeMass=PresetMass;
 	TheComponentNum=1;
 	ComponentLevel=0;

@@ -283,6 +283,13 @@ AJointActor* UBlockBuildingComponent::SpawnConstrainActor(AActor* Parent, AActor
 		JointAcotor->SetLinearPlasticity(CurrentBlock->bIsLinearPlasticity,CurrentBlock->LinearPlasticityThreshold);
 		JointAcotor->SetAngularBreakable(CurrentBlock->bIsAngularBreakable,CurrentBlock->AngularBreakThreshold);
 		JointAcotor->SetAngularPlasticity(CurrentBlock->bIsAngularPlasticity,CurrentBlock->AngularPlasticityThreshold);
+		JointAcotor->SetAngularDriveMode(CurrentBlock->AngularDriveMode);
+		JointAcotor->SetAngularOrientationTarget(CurrentBlock->PosTarget);
+		JointAcotor->SetAngularOrientationDrive(CurrentBlock->bOrientationEnableSwingDrive,CurrentBlock->bOrientationEnableTwistDrive);
+		JointAcotor->SetAngularVelocityTarget(CurrentBlock->VelocityTarget);
+		JointAcotor->SetAngularVelocityDriveTwistAndSwing(CurrentBlock->bVelocityEnableSwingDrive,CurrentBlock->bVelocityEnableTwistDrive);
+		JointAcotor->SetAngularDriveParams(CurrentBlock->PositionStrength,CurrentBlock->VelocityStrength,CurrentBlock->MaxForce);
+		
 		JointAcotor->ReInitConstaintCompont(Cast<APlaceableBase>(JointAcotor->GetConstraintActor1())->GetBlockJointComponent(),Cast<APlaceableBase>(JointAcotor->GetConstraintActor2())->GetBlockJointComponent());
 	}
 	else

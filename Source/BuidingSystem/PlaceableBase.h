@@ -20,6 +20,13 @@ enum class ECustomAngularConstraintMotion : uint8
 	MAX,
 };
 
+UENUM(BlueprintType)
+enum class ECustomAngularDriveMode:uint8
+{
+	SLERP=0,
+	TwistAndSwing
+ };
+
 UCLASS()
 class BUIDINGSYSTEM_API APlaceableBase : public AActor
 {
@@ -57,6 +64,24 @@ public:
 	float PresetMass;
 
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Joint")
+	ECustomAngularConstraintMotion Swing1Limit;
+	
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Joint")
+	ECustomAngularConstraintMotion Swing2Limit;
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Joint")
+	ECustomAngularConstraintMotion TwistLimit;
+	
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Joint")
+	float Angle1;
+	
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Joint")
+	float Angle2;
+	
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Joint")
+	float TwistAngle;
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Joint")
 	bool bIsLinearBreakable;
 
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Joint")
@@ -79,6 +104,36 @@ public:
 
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Joint")
 	float LinearPlasticityThreshold;
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Joint")
+	ECustomAngularDriveMode AngularDriveMode;
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Joint")
+	FRotator PosTarget;
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Joint")
+	bool bOrientationEnableTwistDrive;
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Joint")
+	bool bOrientationEnableSwingDrive;
+	
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Joint")
+	FVector VelocityTarget;
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Joint")
+	bool bVelocityEnableTwistDrive;
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Joint")
+	bool bVelocityEnableSwingDrive;
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Joint")
+	float PositionStrength;
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Joint")
+	float VelocityStrength;
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Joint")
+	float MaxForce;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	float TheWholeMass;
@@ -136,24 +191,6 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnOperate();
-	
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	ECustomAngularConstraintMotion Swing1Limit;
-	
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	ECustomAngularConstraintMotion Swing2Limit;
-
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	ECustomAngularConstraintMotion TwistLimit;
-	
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	float Angle1;
-	
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	float Angle2;
-
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	float TwistAngle;
 
 protected:
 	// Called when the game starts or when spawned

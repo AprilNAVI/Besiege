@@ -82,6 +82,24 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void ConstructStrongConstraint(ECustomAngularConstraintMotion Swing1Limit,float Angle1,ECustomAngularConstraintMotion Swing2Limit,float Angle2,ECustomAngularConstraintMotion TwistLimit,float Twist);
+
+	UFUNCTION(BlueprintCallable)
+	void SetAngularDriveMode(ECustomAngularDriveMode DriveMode);
+
+	UFUNCTION(BlueprintCallable)
+	void SetAngularOrientationDrive(bool bEnableSwingDrive, bool bEnableTwistDrive);
+	
+	UFUNCTION(BlueprintCallable)
+	void SetAngularVelocityDriveTwistAndSwing(bool bEnableTwistDrive, bool bEnableSwingDrive);
+
+	UFUNCTION(BlueprintCallable)
+	void SetAngularOrientationTarget(const FRotator& InPosTarget);
+
+	UFUNCTION(BlueprintCallable)
+	void SetAngularVelocityTarget(const FVector& InVelTarget);
+
+	UFUNCTION(BlueprintCallable)
+	void SetAngularDriveParams(float PositionStrength, float VelocityStrength, float InForceLimit);
 	
 
 };

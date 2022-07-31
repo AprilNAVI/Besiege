@@ -75,3 +75,33 @@ void AJointActor::ConstructStrongConstraint(ECustomAngularConstraintMotion Swing
 	ConstraintComp->SetAngularSwing2Limit(static_cast<EAngularConstraintMotion>(Swing2Limit),Angle2);
 	ConstraintComp->SetAngularTwistLimit(static_cast<EAngularConstraintMotion>(TwistLimit),Twist);
 }
+
+void AJointActor::SetAngularDriveMode(ECustomAngularDriveMode DriveMode)
+{
+	ConstraintComp->SetAngularDriveMode(static_cast<EAngularDriveMode::Type>(DriveMode));
+}
+
+void AJointActor::SetAngularOrientationDrive(bool bEnableSwingDrive, bool bEnableTwistDrive)
+{
+	ConstraintComp->SetAngularOrientationDrive(bEnableSwingDrive,bEnableTwistDrive);
+}
+
+void AJointActor::SetAngularOrientationTarget(const FRotator& InPosTarget)
+{
+	ConstraintComp->SetAngularOrientationTarget(InPosTarget);
+}
+
+void AJointActor::SetAngularVelocityTarget(const FVector& InVelTarget)
+{
+	ConstraintComp->SetAngularVelocityTarget(InVelTarget);
+}
+
+void AJointActor::SetAngularDriveParams(float PositionStrength, float VelocityStrength, float InForceLimit)
+{
+	ConstraintComp->SetAngularDriveParams(PositionStrength,VelocityStrength,InForceLimit);
+}
+
+void AJointActor::SetAngularVelocityDriveTwistAndSwing(bool bEnableTwistDrive, bool bEnableSwingDrive)
+{
+	ConstraintComp->SetAngularVelocityDriveTwistAndSwing(bEnableTwistDrive,bEnableSwingDrive);
+}
