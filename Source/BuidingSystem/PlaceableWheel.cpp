@@ -7,6 +7,7 @@
 
 APlaceableWheel::APlaceableWheel()
 {
+	PrimaryActorTick.bCanEverTick = true;
 	
 	StaticMesh=CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
 	ShellMesh=CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShellMesh"));
@@ -73,5 +74,15 @@ void APlaceableWheel::ReserverRotation(bool IsRightEqualCoreRight)
 FVector APlaceableWheel::GetWheelAxis()
 {
 	return StaticMesh->GetForwardVector();
+}
+
+UPrimitiveComponent* APlaceableWheel::GetCollisionComponent()
+{
+	return StaticMesh;
+}
+
+void APlaceableWheel::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
 }
 

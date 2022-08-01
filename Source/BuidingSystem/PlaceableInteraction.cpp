@@ -5,6 +5,8 @@
 
 APlaceableInteraction::APlaceableInteraction()
 {
+	PrimaryActorTick.bCanEverTick = false;
+	
 	RootComponent=CreateDefaultSubobject<USceneComponent>(TEXT("Scene"));
 	StaticMesh=CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
 	ShellMesh=CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShellMesh"));
@@ -39,6 +41,11 @@ void APlaceableInteraction::Onplaced()
 }
 
 UPrimitiveComponent* APlaceableInteraction::GetBlockJointComponent()
+{
+	return StaticMesh;
+}
+
+UPrimitiveComponent* APlaceableInteraction::GetCollisionComponent()
 {
 	return StaticMesh;
 }

@@ -28,7 +28,11 @@ public:
     UFUNCTION(BlueprintCallable)
 	virtual void Onplaced() override;
 
-	
+	UFUNCTION(BlueprintCallable)
 	virtual UPrimitiveComponent* GetBlockJointComponent() override;
+	
+	virtual UPrimitiveComponent* GetCollisionComponent() override;
+
+	virtual void Tick(float DeltaSeconds) override;
 
 };

@@ -57,6 +57,12 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	TArray<APlaceableBase*> ChildBlocks;
 
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	bool bIsAllowFloat;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	float ForceRatio;
+	
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite)
 	float BlockDistance;
 
@@ -149,6 +155,8 @@ public:
 	
     virtual void Onplaced();
 
+	void Float(bool IsAllowFloat);
+
 	UFUNCTION(BlueprintCallable)
 	void OnSelected();
 
@@ -156,6 +164,9 @@ public:
     void OnCancelSelected();
 
 	virtual UPrimitiveComponent* GetBlockJointComponent();
+
+	UFUNCTION(BlueprintCallable)
+	virtual UPrimitiveComponent* GetCollisionComponent();
 
 	virtual FVector GetCollisonWorldLocation();
 
@@ -191,6 +202,8 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnOperate();
+
+	virtual void Tick(float DeltaSeconds) override;
 
 protected:
 	// Called when the game starts or when spawned

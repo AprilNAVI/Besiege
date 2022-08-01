@@ -3,9 +3,12 @@
 
 #include "PlaceableBase.h"
 
+#include "Kismet/KismetMathLibrary.h"
+
 // Sets default values
 APlaceableBase::APlaceableBase()
 {
+	PrimaryActorTick.bCanEverTick = true;
 
 	Swing1Limit=ECustomAngularConstraintMotion::Free;
 	Swing2Limit=ECustomAngularConstraintMotion::Free;
@@ -35,12 +38,26 @@ APlaceableBase::APlaceableBase()
 	VelocityStrength=1.f;
 	MaxForce=0.f;
 
+	bIsAllowFloat=false;
+	ForceRatio=800.f;
 }
 
 
 
 void APlaceableBase::Onplaced()
 {
+}
+
+void APlaceableBase::Float(bool IsAllowFloat)
+{
+	if (IsAllowFloat)
+	{
+		if (GetCollisionComponent()->IsSimulatingPhysics())
+		{
+			GetCollisionComponent()->AddForce(UKismetMathLibrary::Vector_Up()*PresetMass*ForceRatio);
+			GEngine->AddOnScreenDebugMessage(-1,0.5f,FColor::Green,FString("Float"));
+		}
+	}
 }
 
 void APlaceableBase::OnSelected()
@@ -61,6 +78,11 @@ void APlaceableBase::OnCancelSelected()
 UPrimitiveComponent* APlaceableBase::GetBlockJointComponent()
 {
 	return BoxComponent;
+}
+
+UPrimitiveComponent* APlaceableBase::GetCollisionComponent()
+{
+	return GetBlockJointComponent();
 }
 
 FVector APlaceableBase::GetCollisonWorldLocation()
@@ -189,6 +211,12 @@ void APlaceableBase::ReduceComponentNums()
 	}
 }
 
+void APlaceableBase::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	Float(bIsAllowFloat);
+}
+
 // Called when the game starts or when spawned
 void APlaceableBase::BeginPlay()
 {
@@ -198,6 +226,8 @@ void APlaceableBase::BeginPlay()
 	TheWholeMass=PresetMass;
 	TheComponentNum=1;
 	ComponentLevel=0;
+
+	//GetCollisionComponent()->SetCollisionResponseToChannel(ECC_EngineTraceChannel2,ECR_Ignore);
 }
 
 

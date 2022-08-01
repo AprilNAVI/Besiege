@@ -34,6 +34,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	FVector GetWheelAxis();
+	
+	virtual UPrimitiveComponent* GetCollisionComponent() override;
 
-
+	virtual void Tick(float DeltaSeconds) override;
 };

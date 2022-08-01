@@ -8,6 +8,7 @@
 
 APlaceableTurnWheel::APlaceableTurnWheel()
 {
+	PrimaryActorTick.bCanEverTick = true;
 	PhysicsConstraintComponent=CreateDefaultSubobject<UPhysicsConstraintComponent>(TEXT("SelfJoint"));
 	AxisMesh=CreateDefaultSubobject<UStaticMeshComponent>(TEXT("AxisMesh"));
 
@@ -73,4 +74,9 @@ void APlaceableTurnWheel::Onplaced()
 UPrimitiveComponent* APlaceableTurnWheel::GetBlockJointComponent()
 {
 	return AxisMesh;
+}
+
+void APlaceableTurnWheel::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
 }

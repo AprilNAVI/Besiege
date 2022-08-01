@@ -25,6 +25,8 @@ public:
 	
 	virtual UPrimitiveComponent* GetBlockJointComponent() override;
 
+	virtual void Tick(float DeltaSeconds) override;
+
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
 	UPhysicsConstraintComponent* PhysicsConstraintComponent;
 

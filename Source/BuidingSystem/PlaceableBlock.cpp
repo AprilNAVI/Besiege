@@ -6,6 +6,7 @@
 // Sets default values
 APlaceableBlock::APlaceableBlock()
 {
+	PrimaryActorTick.bCanEverTick = true;
 
 	//RootComponent=CreateDefaultSubobject<USceneComponent>(TEXT("RootSceneComponent"));
 	StaticMesh=CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
@@ -49,6 +50,16 @@ void APlaceableBlock::Onplaced()
 UPrimitiveComponent* APlaceableBlock::GetBlockJointComponent()
 {
 	return Super::GetBlockJointComponent();
+}
+
+UPrimitiveComponent* APlaceableBlock::GetCollisionComponent()
+{
+	return BoxComponent;
+}
+
+void APlaceableBlock::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
 }
 
 

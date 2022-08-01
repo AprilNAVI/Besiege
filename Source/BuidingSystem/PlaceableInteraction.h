@@ -26,4 +26,5 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual UPrimitiveComponent* GetBlockJointComponent() override;
 	
+	virtual UPrimitiveComponent* GetCollisionComponent() override;
 };
